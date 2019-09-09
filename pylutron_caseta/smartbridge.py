@@ -352,7 +352,29 @@ class Smartbridge:
             _LOG.debug(scene)
             if scene['IsProgrammed']:
                 scene_id = scene['href'][scene['href'].rfind('/') + 1:]
-                scene_name = scene['Name']
+                try:
+                    # The Lutron multi-scene kitchen remote is associated with scenes with a different format:
+                    # {
+                    #     'href': '/vbutton/1',
+                    #     'ButtonNumber': 4,
+                    #     'ProgrammingModel': {
+                    #         'href': '/programmingmodel/122'
+                    #     },
+                    #     'Parent': {
+                    #         'href': '/area/6'
+                    #     },
+                    #     'IsProgrammed': True,
+                    #     'Category': {
+                    #         'Type': 'Kitchen',
+                    #         'SubType': 'Off'
+                    #     }
+                    # }
+                    #
+                    # For now, I'm happy just skipping these scenes - I dislike that the remote makes its own
+                    # scenes rather than being mappable to the normal ones anyway.
+                    scene_name = scene['Name']
+                except KeyError:
+                    continue
                 self.scenes[scene_id] = {'scene_id': scene_id,
                                          'name': scene_name}
 
