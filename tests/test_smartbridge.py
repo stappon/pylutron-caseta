@@ -123,6 +123,7 @@ def bridge(event_loop):
                 "Url": "/virtualbutton"},
             "Body": {
                 "VirtualButtons": [{
+                    # Standard scene format
                     "href": "/virtualbutton/1",
                     "Name": "scene 1",
                     "ButtonNumber": 0,
@@ -130,12 +131,30 @@ def bridge(event_loop):
                     "Parent": {"href": "/project"},
                     "IsProgrammed": True
                 }, {
+                    # Standard scene format
                     "href": "/virtualbutton/2",
                     "Name": "Button 2",
                     "ButtonNumber": 1,
                     "ProgrammingModel": {"href": "/programmingmodel/2"},
                     "Parent": {"href": "/project"},
-                    "IsProgrammed": False}]}})
+                    "IsProgrammed": False
+                }, {
+                    # Pico multi-scene remote format (used by, e.g., the PJ2-4B-GWH-P02)
+                    'href': '/vbutton/4',
+                    'ButtonNumber': 1,
+                    'ProgrammingModel': {
+                        'href': '/programmingmodel/125'
+                    },
+                    'Parent': {
+                        'href': '/area/6'
+                    },
+                    'IsProgrammed': True,
+                    'Category': {
+                        'Type': 'Kitchen',
+                        'SubType': 'Bright'
+                    }
+                }]}
+            })
         value = yield from wait(writer.queue.get())
         assert value == {
             "CommuniqueType": "ReadRequest",
